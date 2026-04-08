@@ -12,6 +12,16 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
+import {
+  DndContext,
+  DragOverlay,
+  useDraggable,
+  useDroppable,
+  type DragEndEvent,
+  type DragStartEvent,
+  type DragOverEvent,
+} from "@dnd-kit/core"
+import { CSS } from "@dnd-kit/utilities"
 
 const STATUSES: {
   id: OrderStatus
@@ -55,6 +65,8 @@ export function BoardView() {
     picked: [],
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [activeId, setActiveId] = useState<number | null>(null)
+  const [dragOverStatus, setDragOverStatus] = useState<OrderStatus | null>(null)
 
   const loadOrders = useCallback(() => {
     try {
@@ -65,7 +77,6 @@ export function BoardView() {
         picked: [],
       }
 
-      // Load orders for each status
       for (const status of STATUS_ORDER) {
         newOrders[status] = getOrdersByStatus(status)
       }
@@ -81,7 +92,6 @@ export function BoardView() {
   useEffect(() => {
     loadOrders()
 
-    // Refresh every 2 seconds to catch updates
     const interval = setInterval(loadOrders, 2000)
     return () => clearInterval(interval)
   }, [loadOrders])
@@ -102,6 +112,50 @@ export function BoardView() {
     }
   }
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(Number(event.active.id))
+  }
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const overId = event.over?.id as string | undefined
+    if (overId && STATUS_ORDER.includes(overId as OrderStatus)) {
+      setDragOverStatus(overId as OrderStatus)
+    }
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over) {
+      const orderId = Number(active.id)
+      const targetStatus = over.id as OrderStatus
+
+      // Find current status of the order
+      let currentStatus: OrderStatus | null = null
+      for (const status of STATUS_ORDER) {
+        const order = orders[status].find((o) => o.id === orderId)
+        if (order) {
+          currentStatus = order.status
+          break
+        }
+      }
+
+      if (currentStatus && currentStatus !== targetStatus) {
+        updateOrderStatus(orderId, targetStatus)
+        loadOrders()
+      }
+    }
+
+    setActiveId(null)
+    setDragOverStatus(null)
+  }
+
+  const activeOrder = activeId
+    ? Object.values(orders)
+        .flat()
+        .find((o) => o.id === activeId)
+    : null
+
   const totalActiveOrders =
     orders.dropoff.length + orders.washing.length + orders.ready.length
 
@@ -119,17 +173,28 @@ export function BoardView() {
       </div>
 
       <div className="flex-1 overflow-hidden p-6">
-        <div className="grid h-full grid-cols-4 gap-4">
-          {STATUSES.slice(0, 3).map((status) => (
-            <Column
-              key={status.id}
-              status={status}
-              orders={orders[status.id]}
-              onMoveStatus={handleMoveStatus}
-              isLoading={isLoading}
-            />
-          ))}
-        </div>
+        <DndContext
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="grid h-full grid-cols-4 gap-4">
+            {STATUSES.slice(0, 3).map((status) => (
+              <Column
+                key={status.id}
+                status={status}
+                orders={orders[status.id]}
+                onMoveStatus={handleMoveStatus}
+                isLoading={isLoading}
+                isDragOver={dragOverStatus === status.id}
+              />
+            ))}
+          </div>
+
+          <DragOverlay dropAnimation={null}>
+            {activeOrder ? <OrderCardOverlay order={activeOrder} /> : null}
+          </DragOverlay>
+        </DndContext>
       </div>
     </div>
   )
@@ -144,11 +209,30 @@ interface ColumnProps {
     direction: "forward" | "backward"
   ) => void
   isLoading: boolean
+  isDragOver: boolean
 }
 
-function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
+function Column({
+  status,
+  orders,
+  onMoveStatus,
+  isLoading,
+  isDragOver,
+}: ColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: status.id,
+  })
+
+  const showDragOver = isOver || isDragOver
+
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-lg bg-muted/50">
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "flex h-full min-h-0 flex-col rounded-lg bg-muted/50 transition-all duration-200",
+        showDragOver && "scale-[1.02] bg-primary/10 ring-2 ring-primary"
+      )}
+    >
       <div className="flex items-center gap-2 border-b border-border p-3">
         <div className={cn("h-2 w-2 rounded-full", status.dotColor)} />
         <span className="font-medium text-foreground">{status.label}</span>
@@ -172,7 +256,7 @@ function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
             </div>
           ) : (
             orders.map((order) => (
-              <OrderCard
+              <SortableOrderCard
                 key={order.id}
                 order={order}
                 onMoveStatus={onMoveStatus}
@@ -185,7 +269,7 @@ function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
   )
 }
 
-interface OrderCardProps {
+interface SortableOrderCardProps {
   order: Order
   onMoveStatus: (
     orderId: number,
@@ -194,14 +278,52 @@ interface OrderCardProps {
   ) => void
 }
 
-function OrderCard({ order, onMoveStatus }: OrderCardProps) {
+function SortableOrderCard({ order, onMoveStatus }: SortableOrderCardProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: order.id,
+    })
+
+  const style = transform
+    ? {
+        transform: CSS.Translate.toString(transform),
+      }
+    : undefined
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <OrderCard
+        order={order}
+        onMoveStatus={onMoveStatus}
+        isDragging={isDragging}
+      />
+    </div>
+  )
+}
+
+interface OrderCardProps {
+  order: Order
+  onMoveStatus: (
+    orderId: number,
+    currentStatus: OrderStatus,
+    direction: "forward" | "backward"
+  ) => void
+  isDragging?: boolean
+}
+
+function OrderCard({ order, onMoveStatus, isDragging }: OrderCardProps) {
   const items = parseItems(order.items_json)
   const currentIndex = STATUS_ORDER.indexOf(order.status)
   const canMoveBackward = currentIndex > 0
   const canMoveForward = currentIndex < STATUS_ORDER.length - 1
 
   return (
-    <Card className="border-border bg-card">
+    <Card
+      className={cn(
+        "border-border bg-card transition-all",
+        isDragging && "scale-105 rotate-2 opacity-50 shadow-xl"
+      )}
+    >
       <CardHeader className="p-3 pb-0">
         <div className="flex items-start justify-between">
           <div>
@@ -227,12 +349,14 @@ function OrderCard({ order, onMoveStatus }: OrderCardProps) {
           {formatItemSummary(items)}
         </div>
 
-        {/* Status transition dots */}
         <div className="flex items-center justify-between">
           <div className="flex gap-1">
             {canMoveBackward && (
               <button
-                onClick={() => onMoveStatus(order.id, order.status, "backward")}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onMoveStatus(order.id, order.status, "backward")
+                }}
                 className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-muted-foreground hover:bg-muted hover:text-foreground"
                 title="Move back"
               >
@@ -241,13 +365,68 @@ function OrderCard({ order, onMoveStatus }: OrderCardProps) {
             )}
             {canMoveForward && (
               <button
-                onClick={() => onMoveStatus(order.id, order.status, "forward")}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onMoveStatus(order.id, order.status, "forward")
+                }}
                 className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
                 title="Move forward"
               >
                 →
               </button>
             )}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {formatDate(order.updated_at)}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+interface OrderCardOverlayProps {
+  order: Order
+}
+
+function OrderCardOverlay({ order }: OrderCardOverlayProps) {
+  const items = parseItems(order.items_json)
+
+  return (
+    <Card className="w-64 scale-105 rotate-2 cursor-grabbing border-border bg-card opacity-95 shadow-2xl ring-2 ring-primary">
+      <CardHeader className="p-3 pb-0">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-xs text-muted-foreground">
+              Order #{order.id}
+            </div>
+            <div className="font-medium text-card-foreground">
+              {order.customer_name}
+            </div>
+          </div>
+          <div className="text-sm font-semibold text-card-foreground">
+            {formatPrice(order.total)}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-3 pt-2">
+        {order.phone && (
+          <div className="mb-2 text-xs text-muted-foreground">
+            {order.phone}
+          </div>
+        )}
+        <div className="mb-3 text-xs text-muted-foreground">
+          {formatItemSummary(items)}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex gap-1">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-muted-foreground">
+              ←
+            </div>
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              →
+            </div>
           </div>
           <div className="text-xs text-muted-foreground">
             {formatDate(order.updated_at)}
