@@ -64,6 +64,16 @@ export async function initDB(): Promise<Database> {
   if (existingDb) {
     db = existingDb
     console.log("Database loaded from OPFS")
+
+    // Auto-seed mock data if database is empty
+    const orderCount = db.exec("SELECT COUNT(*) FROM orders")
+    const count = orderCount[0]?.values[0]?.[0] as number
+    if (count === 0) {
+      console.log("Empty database detected, auto-seeding mock data...")
+      const mockData = await import("./mock-data")
+      await mockData.seedMockOrders({ total: 12 })
+      await persistDB()
+    }
   } else {
     // Create new database
     db = new SQL.Database()
@@ -74,6 +84,11 @@ export async function initDB(): Promise<Database> {
 
     // Seed default items
     seedItems()
+
+    // Auto-seed mock data for demo
+    console.log("Auto-seeding mock data...")
+    const mockData = await import("./mock-data")
+    await mockData.seedMockOrders({ total: 12 })
 
     // Save to OPFS
     await persistDB()
@@ -497,4 +512,46 @@ export function formatItemSummary(items: Item[]): string {
  */
 export function formatDate(timestamp: number): string {
   return new Date(timestamp * 1000).toLocaleDateString()
+}
+
+/**
+ * Seed database with mock data for testing/demo
+ */
+export async function seedMockData(options?: {
+  total?: number
+  quick?: boolean
+  large?: number
+}): Promise<void> {
+  const mockData = await import("./mock-data")
+
+  if (options?.quick) {
+    await Promise.resolve(mockData.seedQuickMockData())
+  } else if (options?.large) {
+    await mockData.seedLargeMockDataset(options.large)
+  } else {
+    await mockData.seedMockOrders({ total: options?.total || 15 })
+  }
+
+  mockData.printOrderSummary()
+}
+
+/**
+ * Clear all orders from the database (keeps items_lookup)
+ */
+export function clearAllOrders(): void {
+  if (!db) throw new Error("Database not initialized")
+
+  db.run("DELETE FROM orders")
+  persistDB()
+  console.log("✅ All orders cleared")
+}
+
+// Make functions available in browser console for debugging
+if (typeof window !== "undefined") {
+  ;(window as unknown as Record<string, unknown>).laundryDB = {
+    seedMockData,
+    clearAllOrders,
+    getOrders: () => getOrders(true),
+    exportDB,
+  }
 }
