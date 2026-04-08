@@ -17,12 +17,14 @@ const navItems: { id: View; label: string; icon: typeof LayoutGrid }[] = [
 
 export function Sidebar({ currentView, onViewChange }: SidebarProps) {
   return (
-    <aside className="flex w-60 flex-col border-r border-[#272a30] bg-[#0f1115]">
-      <div className="flex items-center gap-2 border-b border-[#272a30] px-4 py-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#5e6ad2]">
-          <span className="text-sm font-bold text-white">L</span>
+    <aside className="flex w-60 flex-col border-r border-border bg-sidebar">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+          <span className="text-sm font-bold text-primary-foreground">L</span>
         </div>
-        <span className="font-semibold text-white">Laundry Biz</span>
+        <span className="font-semibold text-sidebar-foreground">
+          Laundry Biz
+        </span>
       </div>
 
       <nav className="flex-1 p-2">
@@ -38,8 +40,8 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
                 className={cn(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-[#5e6ad2]/10 text-[#5e6ad2]"
-                    : "text-[#6f7682] hover:bg-[#161922] hover:text-white"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -50,9 +52,9 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
         </div>
       </nav>
 
-      <div className="border-t border-[#272a30] p-4">
-        <div className="text-xs text-[#6f7682]">
-          <div className="font-medium text-white">Storage</div>
+      <div className="border-t border-border p-4">
+        <div className="text-xs text-muted-foreground">
+          <div className="font-medium text-sidebar-foreground">Storage</div>
           <div className="mt-1">Data is saved locally in your browser.</div>
         </div>
       </div>

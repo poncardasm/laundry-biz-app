@@ -107,10 +107,12 @@ export function BoardView() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-[#272a30] px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div>
-          <h1 className="text-xl font-semibold text-white">Orders Board</h1>
-          <p className="text-sm text-[#6f7682]">
+          <h1 className="text-xl font-semibold text-foreground">
+            Orders Board
+          </h1>
+          <p className="text-sm text-muted-foreground">
             {totalActiveOrders} active orders
           </p>
         </div>
@@ -146,13 +148,13 @@ interface ColumnProps {
 
 function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
   return (
-    <div className="flex h-full flex-col rounded-lg bg-[#161922]/50">
-      <div className="flex items-center gap-2 border-b border-[#272a30] p-3">
+    <div className="flex h-full flex-col rounded-lg bg-muted/50">
+      <div className="flex items-center gap-2 border-b border-border p-3">
         <div className={cn("h-2 w-2 rounded-full", status.dotColor)} />
-        <span className="font-medium text-white">{status.label}</span>
+        <span className="font-medium text-foreground">{status.label}</span>
         <Badge
           variant="secondary"
-          className="ml-auto bg-[#272a30] text-[#6f7682]"
+          className="ml-auto bg-secondary text-muted-foreground"
         >
           {orders.length}
         </Badge>
@@ -161,11 +163,11 @@ function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
       <ScrollArea className="flex-1 p-2">
         <div className="flex flex-col gap-2">
           {isLoading ? (
-            <div className="py-4 text-center text-sm text-[#6f7682]">
+            <div className="py-4 text-center text-sm text-muted-foreground">
               Loading...
             </div>
           ) : orders.length === 0 ? (
-            <div className="py-8 text-center text-sm text-[#6f7682]">
+            <div className="py-8 text-center text-sm text-muted-foreground">
               No orders
             </div>
           ) : (
@@ -199,23 +201,29 @@ function OrderCard({ order, onMoveStatus }: OrderCardProps) {
   const canMoveForward = currentIndex < STATUS_ORDER.length - 1
 
   return (
-    <Card className="border-[#272a30] bg-[#161922]">
+    <Card className="border-border bg-card">
       <CardHeader className="p-3 pb-0">
         <div className="flex items-start justify-between">
           <div>
-            <div className="text-xs text-[#6f7682]">Order #{order.id}</div>
-            <div className="font-medium text-white">{order.customer_name}</div>
+            <div className="text-xs text-muted-foreground">
+              Order #{order.id}
+            </div>
+            <div className="font-medium text-card-foreground">
+              {order.customer_name}
+            </div>
           </div>
-          <div className="text-sm font-semibold text-white">
+          <div className="text-sm font-semibold text-card-foreground">
             {formatPrice(order.total)}
           </div>
         </div>
       </CardHeader>
       <CardContent className="p-3 pt-2">
         {order.phone && (
-          <div className="mb-2 text-xs text-[#6f7682]">{order.phone}</div>
+          <div className="mb-2 text-xs text-muted-foreground">
+            {order.phone}
+          </div>
         )}
-        <div className="mb-3 text-xs text-[#6f7682]">
+        <div className="mb-3 text-xs text-muted-foreground">
           {formatItemSummary(items)}
         </div>
 
@@ -225,7 +233,7 @@ function OrderCard({ order, onMoveStatus }: OrderCardProps) {
             {canMoveBackward && (
               <button
                 onClick={() => onMoveStatus(order.id, order.status, "backward")}
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-[#272a30] text-[#6f7682] hover:bg-[#3a3f47] hover:text-white"
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-muted-foreground hover:bg-muted hover:text-foreground"
                 title="Move back"
               >
                 ←
@@ -234,14 +242,14 @@ function OrderCard({ order, onMoveStatus }: OrderCardProps) {
             {canMoveForward && (
               <button
                 onClick={() => onMoveStatus(order.id, order.status, "forward")}
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-[#5e6ad2] text-white hover:bg-[#4f5ab8]"
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
                 title="Move forward"
               >
                 →
               </button>
             )}
           </div>
-          <div className="text-xs text-[#6f7682]">
+          <div className="text-xs text-muted-foreground">
             {formatDate(order.updated_at)}
           </div>
         </div>

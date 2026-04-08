@@ -136,40 +136,45 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-[#272a30] px-6 py-4">
-        <h1 className="text-xl font-semibold text-white">New Order</h1>
-        <p className="text-sm text-[#6f7682]">Create a new laundry order</p>
+      <div className="border-b border-border px-6 py-4">
+        <h1 className="text-xl font-semibold text-foreground">New Order</h1>
+        <p className="text-sm text-muted-foreground">
+          Create a new laundry order
+        </p>
       </div>
 
       <div className="flex-1 overflow-auto p-6">
         <div className="mx-auto max-w-2xl">
           {error && (
-            <Alert className="mb-4 border-red-500/50 bg-red-500/10">
-              <AlertDescription className="text-red-400">
+            <Alert className="mb-4 border-red-200 bg-red-50">
+              <AlertDescription className="text-red-600">
                 {error}
               </AlertDescription>
             </Alert>
           )}
 
           {success && (
-            <Alert className="mb-4 border-green-500/50 bg-green-500/10">
-              <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-              <AlertDescription className="text-green-400">
+            <Alert className="mb-4 border-green-200 bg-green-50">
+              <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-600">
                 Order created successfully!
               </AlertDescription>
             </Alert>
           )}
 
           <form onSubmit={handleSubmit}>
-            <Card className="border-[#272a30] bg-[#161922]">
+            <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-white">
+                <CardTitle className="text-card-foreground">
                   Customer Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="customerName" className="text-white">
+                  <Label
+                    htmlFor="customerName"
+                    className="text-card-foreground"
+                  >
                     Customer Name <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -177,12 +182,12 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder="Enter customer name"
-                    className="border-[#272a30] bg-[#0f1115] text-white placeholder:text-[#6f7682]"
+                    className="border-input bg-background text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-white">
+                  <Label htmlFor="phone" className="text-card-foreground">
                     Phone Number
                   </Label>
                   <Input
@@ -190,21 +195,21 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Enter phone number (optional)"
-                    className="border-[#272a30] bg-[#0f1115] text-white placeholder:text-[#6f7682]"
+                    className="border-input bg-background text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="mt-4 border-[#272a30] bg-[#161922]">
+            <Card className="mt-4 border-border bg-card">
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-white">Items</CardTitle>
+                <CardTitle className="text-card-foreground">Items</CardTitle>
                 <Button
                   type="button"
                   onClick={handleAddItemRow}
                   variant="outline"
                   size="sm"
-                  className="border-[#5e6ad2] text-[#5e6ad2] hover:bg-[#5e6ad2]/10"
+                  className="border-primary text-primary hover:bg-primary/10"
                 >
                   <Plus className="mr-1 h-4 w-4" />
                   Add Item
@@ -214,22 +219,24 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                 {itemRows.map((row) => (
                   <div key={row.id} className="flex items-end gap-2">
                     <div className="flex-1 space-y-2">
-                      <Label className="text-xs text-[#6f7682]">Item</Label>
+                      <Label className="text-xs text-muted-foreground">
+                        Item
+                      </Label>
                       <Select
                         value={row.name}
                         onValueChange={(value) =>
                           handleItemChange(row.id, value)
                         }
                       >
-                        <SelectTrigger className="border-[#272a30] bg-[#0f1115] text-white">
+                        <SelectTrigger className="border-input bg-background text-foreground">
                           <SelectValue placeholder="Select item" />
                         </SelectTrigger>
-                        <SelectContent className="border-[#272a30] bg-[#161922]">
+                        <SelectContent className="border-border bg-popover">
                           {items.map((item) => (
                             <SelectItem
                               key={item.name}
                               value={item.name}
-                              className="text-white focus:bg-[#5e6ad2]/20 focus:text-white"
+                              className="text-foreground focus:bg-accent focus:text-accent-foreground"
                             >
                               {item.name} ({formatPrice(item.unit_price)})
                             </SelectItem>
@@ -239,7 +246,9 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                     </div>
 
                     <div className="w-24 space-y-2">
-                      <Label className="text-xs text-[#6f7682]">Qty</Label>
+                      <Label className="text-xs text-muted-foreground">
+                        Qty
+                      </Label>
                       <Input
                         type="number"
                         min={1}
@@ -250,13 +259,15 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                             parseInt(e.target.value) || 1
                           )
                         }
-                        className="border-[#272a30] bg-[#0f1115] text-white"
+                        className="border-input bg-background text-foreground"
                       />
                     </div>
 
                     <div className="w-24 space-y-2">
-                      <Label className="text-xs text-[#6f7682]">Price</Label>
-                      <div className="flex h-9 items-center text-sm text-white">
+                      <Label className="text-xs text-muted-foreground">
+                        Price
+                      </Label>
+                      <div className="flex h-9 items-center text-sm text-foreground">
                         {formatPrice(row.unit_price * row.quantity)}
                       </div>
                     </div>
@@ -267,7 +278,7 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                         onClick={() => handleRemoveItemRow(row.id)}
                         variant="ghost"
                         size="icon"
-                        className="text-[#6f7682] hover:text-red-500"
+                        className="text-muted-foreground hover:text-red-500"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -275,9 +286,9 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
                   </div>
                 ))}
 
-                <div className="mt-4 flex items-center justify-between border-t border-[#272a30] pt-4">
-                  <span className="text-[#6f7682]">Total</span>
-                  <span className="text-xl font-bold text-white">
+                <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+                  <span className="text-muted-foreground">Total</span>
+                  <span className="text-xl font-bold text-foreground">
                     {formatPrice(total)}
                   </span>
                 </div>
@@ -288,7 +299,7 @@ export function NewOrderView({ onOrderCreated }: NewOrderViewProps) {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="bg-[#5e6ad2] text-white hover:bg-[#4f5ab8]"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {isLoading ? "Creating..." : "Create Order"}
               </Button>

@@ -55,12 +55,12 @@ function App() {
   // Loading state
   if (!dbReady && !error) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0f1115]">
+      <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mb-4 text-2xl font-semibold text-white">
+          <div className="mb-4 text-2xl font-semibold text-foreground">
             Laundry Biz App
           </div>
-          <div className="text-[#6f7682]">Initializing database...</div>
+          <div className="text-muted-foreground">Initializing database...</div>
         </div>
       </div>
     )
@@ -69,11 +69,11 @@ function App() {
   // Error state
   if (error) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0f1115]">
+      <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="mb-4 text-2xl font-semibold text-red-500">Error</div>
-          <div className="text-[#6f7682]">{error}</div>
-          <div className="mt-4 text-sm text-[#6f7682]">
+          <div className="text-muted-foreground">{error}</div>
+          <div className="mt-4 text-sm text-muted-foreground">
             Please make sure you're using Chrome or Edge with OPFS support.
           </div>
         </div>
@@ -82,7 +82,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-[#0f1115]">
+    <div className="flex h-screen bg-background">
       <Sidebar currentView={currentView} onViewChange={handleViewChange} />
       <main className="flex-1 overflow-hidden">{renderView()}</main>
     </div>

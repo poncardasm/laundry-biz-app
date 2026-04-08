@@ -109,59 +109,63 @@ export function BackupView() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-[#272a30] px-6 py-4">
-        <h1 className="text-xl font-semibold text-white">Backup & Restore</h1>
-        <p className="text-sm text-[#6f7682]">Export and import your data</p>
+      <div className="border-b border-border px-6 py-4">
+        <h1 className="text-xl font-semibold text-foreground">
+          Backup & Restore
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Export and import your data
+        </p>
       </div>
 
       <div className="flex-1 overflow-auto p-6">
         <div className="mx-auto max-w-2xl space-y-6">
           {/* Import Status Alerts */}
           {importStatus === "success" && (
-            <Alert className="border-green-500/50 bg-green-500/10">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              <AlertDescription className="text-green-400">
+            <Alert className="border-green-200 bg-green-50">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-600">
                 {importMessage}
               </AlertDescription>
             </Alert>
           )}
 
           {importStatus === "error" && (
-            <Alert className="border-red-500/50 bg-red-500/10">
-              <AlertTriangle className="h-4 w-4 text-red-500" />
-              <AlertDescription className="text-red-400">
+            <Alert className="border-red-200 bg-red-50">
+              <AlertTriangle className="h-4 w-4 text-red-600" />
+              <AlertDescription className="text-red-600">
                 {importMessage}
               </AlertDescription>
             </Alert>
           )}
 
           {/* Export Section */}
-          <Card className="border-[#272a30] bg-[#161922]">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Download className="h-5 w-5 text-[#5e6ad2]" />
+              <CardTitle className="flex items-center gap-2 text-card-foreground">
+                <Download className="h-5 w-5 text-primary" />
                 Export Database
               </CardTitle>
-              <CardDescription className="text-[#6f7682]">
+              <CardDescription className="text-muted-foreground">
                 Download a backup of your entire database
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-[#6f7682]">
+              <p className="text-sm text-muted-foreground">
                 This will create a .db file containing all your orders,
                 customers, and settings. Keep this file safe as your backup.
               </p>
 
               <Button
                 onClick={handleExport}
-                className="bg-[#5e6ad2] text-white hover:bg-[#4f5ab8]"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <Download className="mr-2 h-4 w-4" />
                 Export to File
               </Button>
 
               {exportSuccess && (
-                <p className="text-sm text-green-400">
+                <p className="text-sm text-green-600">
                   Export successful! File downloaded.
                 </p>
               )}
@@ -169,26 +173,26 @@ export function BackupView() {
           </Card>
 
           {/* Import Section */}
-          <Card className="border-[#272a30] bg-[#161922]">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Upload className="h-5 w-5 text-[#5e6ad2]" />
+              <CardTitle className="flex items-center gap-2 text-card-foreground">
+                <Upload className="h-5 w-5 text-primary" />
                 Restore Database
               </CardTitle>
-              <CardDescription className="text-[#6f7682]">
+              <CardDescription className="text-muted-foreground">
                 Import a previously exported .db file
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Alert className="border-yellow-500/50 bg-yellow-500/10">
-                <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                <AlertDescription className="text-yellow-400">
+              <Alert className="border-yellow-200 bg-yellow-50">
+                <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                <AlertDescription className="text-yellow-700">
                   Warning: Importing will replace all current data with the
                   backup data. This action cannot be undone.
                 </AlertDescription>
               </Alert>
 
-              <p className="text-sm text-[#6f7682]">
+              <p className="text-sm text-muted-foreground">
                 Select a .db file that was previously exported from this app.
               </p>
 
@@ -203,7 +207,7 @@ export function BackupView() {
               <Button
                 onClick={handleImportClick}
                 variant="outline"
-                className="border-[#272a30] text-white hover:bg-[#272a30]"
+                className="border-border text-foreground hover:bg-muted"
               >
                 <Upload className="mr-2 h-4 w-4" />
                 Select Backup File
@@ -212,14 +216,14 @@ export function BackupView() {
           </Card>
 
           {/* Storage Info */}
-          <Card className="border-[#272a30] bg-[#161922]">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Database className="h-5 w-5 text-[#5e6ad2]" />
+              <CardTitle className="flex items-center gap-2 text-card-foreground">
+                <Database className="h-5 w-5 text-primary" />
                 Storage Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm text-[#6f7682]">
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
                 Your data is stored locally in your browser using the Origin
                 Private File System (OPFS). This means:
@@ -240,7 +244,7 @@ export function BackupView() {
                 onClick={handleForceSave}
                 variant="outline"
                 size="sm"
-                className="mt-2 border-[#272a30] text-[#6f7682] hover:bg-[#272a30]"
+                className="mt-2 border-border text-muted-foreground hover:bg-muted"
               >
                 Force Save Now
               </Button>
