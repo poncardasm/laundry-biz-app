@@ -148,7 +148,7 @@ interface ColumnProps {
 
 function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
   return (
-    <div className="flex h-full flex-col rounded-lg bg-muted/50">
+    <div className="flex h-full min-h-0 flex-col rounded-lg bg-muted/50">
       <div className="flex items-center gap-2 border-b border-border p-3">
         <div className={cn("h-2 w-2 rounded-full", status.dotColor)} />
         <span className="font-medium text-foreground">{status.label}</span>
@@ -160,7 +160,7 @@ function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
         </Badge>
       </div>
 
-      <ScrollArea className="flex-1 p-2">
+      <ScrollArea className="flex-1 overflow-hidden p-2">
         <div className="flex flex-col gap-2">
           {isLoading ? (
             <div className="py-4 text-center text-sm text-muted-foreground">
