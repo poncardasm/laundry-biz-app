@@ -9,7 +9,7 @@ export async function initDB(): Promise<Database> {
   if (db) return db;
 
   const SQL = await initSqlJs({
-    locateFile: (file) => `https://sql.js.org/dist/${file}`
+    locateFile: (file) => `/${file}`
   });
 
   const hasOPFS = 'storage' in navigator && 'getDirectory' in navigator.storage;
@@ -134,7 +134,7 @@ export function exportDB(): Uint8Array | null {
 
 export async function importDB(data: Uint8Array): Promise<void> {
   const SQL = await initSqlJs({
-    locateFile: (file) => `https://sql.js.org/dist/${file}`
+    locateFile: (file) => `/${file}`
   });
 
   if (db) {
