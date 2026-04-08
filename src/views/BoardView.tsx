@@ -160,8 +160,8 @@ function Column({ status, orders, onMoveStatus, isLoading }: ColumnProps) {
         </Badge>
       </div>
 
-      <ScrollArea className="flex-1 overflow-hidden p-2">
-        <div className="flex flex-col gap-2">
+      <ScrollArea className="flex-1 overflow-hidden">
+        <div className="flex flex-col gap-2 p-3">
           {isLoading ? (
             <div className="py-4 text-center text-sm text-muted-foreground">
               Loading...
