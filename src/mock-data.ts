@@ -5,23 +5,23 @@ export type OrderStatus = "dropoff" | "washing" | "ready" | "picked"
 
 // Mock data for populating the laundry business database
 
-// Sample customer data
+// Sample customer data - Filipino names
 const CUSTOMERS = [
-  { name: "John Smith", phone: "+31 6 1234 5678" },
-  { name: "Emma Johnson", phone: "+31 6 2345 6789" },
-  { name: "Michael Brown", phone: "+31 6 3456 7890" },
-  { name: "Sarah Davis", phone: "+31 6 4567 8901" },
-  { name: "James Wilson", phone: "+31 6 5678 9012" },
-  { name: "Emily Miller", phone: "+31 6 6789 0123" },
-  { name: "David Garcia", phone: "+31 6 7890 1234" },
-  { name: "Sophia Martinez", phone: "+31 6 8901 2345" },
-  { name: "William Anderson", phone: "+31 6 9012 3456" },
-  { name: "Olivia Taylor", phone: "+31 6 0123 4567" },
-  { name: "Benjamin Thomas", phone: "+31 6 1123 4567" },
-  { name: "Ava Jackson", phone: "+31 6 2234 5678" },
-  { name: "Lucas White", phone: "+31 6 3345 6789" },
-  { name: "Mia Harris", phone: "+31 6 4456 7890" },
-  { name: "Henry Martin", phone: "+31 6 5567 8901" },
+  { name: "Maria Santos", phone: "+63 917 123 4567" },
+  { name: "Juan Dela Cruz", phone: "+63 918 234 5678" },
+  { name: "Ana Reyes", phone: "+63 919 345 6789" },
+  { name: "Jose Garcia", phone: "+63 920 456 7890" },
+  { name: "Linda Torres", phone: "+63 921 567 8901" },
+  { name: "Pedro Aquino", phone: "+63 922 678 9012" },
+  { name: "Elena Fernandez", phone: "+63 923 789 0123" },
+  { name: "Miguel Cruz", phone: "+63 924 890 1234" },
+  { name: "Carmen Villanueva", phone: "+63 925 901 2345" },
+  { name: "Ramon Lim", phone: "+63 926 012 3456" },
+  { name: "Rosario Bautista", phone: "+63 927 123 4567" },
+  { name: "Fernando Ramos", phone: "+63 928 234 5678" },
+  { name: "Patricia Mendoza", phone: "+63 929 345 6789" },
+  { name: "Antonio Flores", phone: "+63 930 456 7890" },
+  { name: "Dolores Castro", phone: "+63 931 567 8901" },
 ]
 
 // Available item types with prices
@@ -68,87 +68,87 @@ const generateRandomItems = (): Item[] => {
 const calculateTotal = (items: Item[]): number =>
   items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0)
 
-// Mock order templates with realistic scenarios
+// Mock order templates with realistic scenarios - Filipino customers
 const ORDER_SCENARIOS = [
   {
-    name: "John Smith",
+    name: "Maria Santos",
     items: [{ name: "Shirt", quantity: 3, unit_price: 25 }],
   },
   {
-    name: "Emma Johnson",
+    name: "Juan Dela Cruz",
     items: [{ name: "Dress", quantity: 2, unit_price: 50 }],
   },
   {
-    name: "Michael Brown",
+    name: "Ana Reyes",
     items: [
       { name: "Suit", quantity: 1, unit_price: 120 },
       { name: "Shirt", quantity: 2, unit_price: 25 },
     ],
   },
   {
-    name: "Sarah Davis",
+    name: "Jose Garcia",
     items: [{ name: "Coat", quantity: 1, unit_price: 80 }],
   },
   {
-    name: "James Wilson",
+    name: "Linda Torres",
     items: [
       { name: "Pants", quantity: 2, unit_price: 35 },
       { name: "Shirt", quantity: 4, unit_price: 25 },
     ],
   },
   {
-    name: "Emily Miller",
+    name: "Pedro Aquino",
     items: [
       { name: "Dress", quantity: 1, unit_price: 50 },
       { name: "Jacket", quantity: 1, unit_price: 60 },
     ],
   },
   {
-    name: "David Garcia",
+    name: "Elena Fernandez",
     items: [{ name: "Jacket", quantity: 2, unit_price: 60 }],
   },
   {
-    name: "Sophia Martinez",
+    name: "Miguel Cruz",
     items: [
       { name: "Shirt", quantity: 5, unit_price: 25 },
       { name: "Pants", quantity: 2, unit_price: 35 },
     ],
   },
   {
-    name: "William Anderson",
+    name: "Carmen Villanueva",
     items: [{ name: "Suit", quantity: 2, unit_price: 120 }],
   },
   {
-    name: "Olivia Taylor",
+    name: "Ramon Lim",
     items: [
       { name: "Coat", quantity: 1, unit_price: 80 },
       { name: "Dress", quantity: 2, unit_price: 50 },
     ],
   },
   {
-    name: "Benjamin Thomas",
+    name: "Rosario Bautista",
     items: [{ name: "Pants", quantity: 3, unit_price: 35 }],
   },
   {
-    name: "Ava Jackson",
+    name: "Fernando Ramos",
     items: [
       { name: "Shirt", quantity: 2, unit_price: 25 },
       { name: "Jacket", quantity: 1, unit_price: 60 },
     ],
   },
   {
-    name: "Lucas White",
+    name: "Patricia Mendoza",
     items: [{ name: "Dress", quantity: 3, unit_price: 50 }],
   },
   {
-    name: "Mia Harris",
+    name: "Antonio Flores",
     items: [
       { name: "Coat", quantity: 2, unit_price: 80 },
       { name: "Shirt", quantity: 3, unit_price: 25 },
     ],
   },
   {
-    name: "Henry Martin",
+    name: "Dolores Castro",
     items: [
       { name: "Suit", quantity: 1, unit_price: 120 },
       { name: "Pants", quantity: 1, unit_price: 35 },
