@@ -97,19 +97,11 @@ export function BoardView() {
   }, [loadOrders])
 
   const handleMoveStatus = (
-    orderId: number,
-    currentStatus: OrderStatus,
-    direction: "forward" | "backward"
+    _orderId: number,
+    _currentStatus: OrderStatus,
+    _direction: "forward" | "backward"
   ) => {
-    const currentIndex = STATUS_ORDER.indexOf(currentStatus)
-    const newIndex =
-      direction === "forward" ? currentIndex + 1 : currentIndex - 1
-
-    if (newIndex >= 0 && newIndex < STATUS_ORDER.length) {
-      const newStatus = STATUS_ORDER[newIndex]
-      updateOrderStatus(orderId, newStatus)
-      loadOrders()
-    }
+    // Kept for potential future use - currently disabled in favor of drag and drop
   }
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -311,11 +303,12 @@ interface OrderCardProps {
   isDragging?: boolean
 }
 
-function OrderCard({ order, onMoveStatus, isDragging }: OrderCardProps) {
+function OrderCard({
+  order,
+  onMoveStatus: _onMoveStatus,
+  isDragging,
+}: OrderCardProps) {
   const items = parseItems(order.items_json)
-  const currentIndex = STATUS_ORDER.indexOf(order.status)
-  const canMoveBackward = currentIndex > 0
-  const canMoveForward = currentIndex < STATUS_ORDER.length - 1
 
   return (
     <Card
@@ -349,33 +342,7 @@ function OrderCard({ order, onMoveStatus, isDragging }: OrderCardProps) {
           {formatItemSummary(items)}
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex gap-1">
-            {canMoveBackward && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onMoveStatus(order.id, order.status, "backward")
-                }}
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-muted-foreground hover:bg-muted hover:text-foreground"
-                title="Move back"
-              >
-                ←
-              </button>
-            )}
-            {canMoveForward && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onMoveStatus(order.id, order.status, "forward")
-                }}
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-                title="Move forward"
-              >
-                →
-              </button>
-            )}
-          </div>
+        <div className="flex items-center justify-end">
           <div className="text-xs text-muted-foreground">
             {formatDate(order.updated_at)}
           </div>
@@ -419,15 +386,7 @@ function OrderCardOverlay({ order }: OrderCardOverlayProps) {
           {formatItemSummary(items)}
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex gap-1">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-muted-foreground">
-              ←
-            </div>
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              →
-            </div>
-          </div>
+        <div className="flex items-center justify-end">
           <div className="text-xs text-muted-foreground">
             {formatDate(order.updated_at)}
           </div>
