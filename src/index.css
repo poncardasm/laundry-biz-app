@@ -1,111 +1,179 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Inter Variable';
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.19/files/inter-latin-ext-400-normal.woff2') format('woff2');
+  font-weight: 300 590;
+  font-display: swap;
+}
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --color-bg-marketing: #08090a;
+  --color-bg-panel: #0f1011;
+  --color-bg-surface: #191a1b;
+  --color-bg-secondary: #28282c;
+  
+  --color-text-primary: #f7f8f8;
+  --color-text-secondary: #d0d6e0;
+  --color-text-tertiary: #8a8f98;
+  --color-text-quaternary: #62666d;
+  
+  --color-brand-bg: #5e6ad2;
+  --color-brand-accent: #7170ff;
+  --color-brand-hover: #828fff;
+  --color-brand-muted: #7a7fad;
+  
+  --color-status-green: #27a644;
+  --color-status-emerald: #10b981;
+  
+  --color-border: #23252a;
+  --color-border-secondary: #34343a;
+  --color-border-tertiary: #3e3e44;
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-standard: rgba(255, 255, 255, 0.08);
+  
+  --font-sans: 'Inter Variable', SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
+  --font-mono: ui-monospace, SF Mono, Menlo, Consolas, monospace;
+  
+  --shadow-level-1: rgba(0, 0, 0, 0.03) 0px 1.2px 0px;
+  --shadow-level-2: rgba(0, 0, 0, 0.2) 0px 0px 0px 1px;
+  --shadow-level-4: rgba(0, 0, 0, 0.4) 0px 2px 4px;
+  --shadow-focus: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 22px;
+  --radius-full: 9999px;
+  --radius-circle: 50%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+html {
+  background: var(--color-bg-marketing);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+body {
+  min-height: 100vh;
+  background: var(--color-bg-marketing);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
+  font-weight: 510;
+  letter-spacing: -0.02em;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: 32px;
+  letter-spacing: -0.704px;
+  line-height: 1.13;
+  font-weight: 400;
 }
+
 h2 {
   font-size: 24px;
-  line-height: 118%;
+  letter-spacing: -0.288px;
+  line-height: 1.33;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 20px;
   letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  line-height: 1.33;
+  font-weight: 590;
 }
+
 p {
-  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
+button {
+  font-family: var(--font-sans);
+  font-feature-settings: "cv01", "ss03";
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+input, select, textarea {
+  font-family: var(--font-sans);
+  font-feature-settings: "cv01", "ss03";
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border-standard);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-brand-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+a {
+  color: var(--color-brand-accent);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--color-brand-hover);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-brand-accent);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  color: var(--text-h);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+::selection {
+  background: rgba(94, 106, 210, 0.3);
+  color: var(--color-text-primary);
 }
