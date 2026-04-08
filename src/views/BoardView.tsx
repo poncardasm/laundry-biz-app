@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { getOrders, updateOrderStatus } from '../db'
 import type { Order } from '../db'
 import OrderCard from '../components/OrderCard'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 const statusColumns = [
-  { id: 'new', label: 'New', color: '#8a8f98' },
-  { id: 'processing', label: 'Processing', color: '#5e6ad2' },
-  { id: 'ready', label: 'Ready', color: '#27a644' },
-  { id: 'completed', label: 'Completed', color: '#10b981' }
+  { id: 'new', label: 'New', color: 'bg-muted-foreground' },
+  { id: 'processing', label: 'Processing', color: 'bg-primary' },
+  { id: 'ready', label: 'Ready', color: 'bg-emerald-500' },
+  { id: 'completed', label: 'Completed', color: 'bg-green-500' }
 ]
 
 export default function BoardView() {
@@ -47,12 +49,8 @@ export default function BoardView() {
   return (
     <div>
       <div className="mb-6">
-        <h2 style={{ color: 'var(--color-text-primary)' }}>
-          Order Board
-        </h2>
-        <p className="mt-1 text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-          Click status dots to move orders
-        </p>
+        <h2 className="text-2xl font-semibold">Order Board</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Click arrows to move orders between columns</p>
       </div>
 
       <div className="grid grid-cols-4 gap-4">
@@ -61,34 +59,19 @@ export default function BoardView() {
           
           return (
             <div key={column.id} className="flex flex-col">
-              <div 
-                className="px-3 py-2 rounded-md mb-3 flex items-center justify-between"
-                style={{ background: 'rgba(255, 255, 255, 0.02)' }}
-              >
-                <div className="flex items-center gap-2">
-                  <div 
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: column.color }}
-                  />
-                  <span 
-                    className="text-sm font-medium"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {column.label}
-                  </span>
-                </div>
-                <span 
-                  className="text-xs px-2 py-0.5 rounded-full"
-                  style={{ 
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    color: 'var(--color-text-tertiary)'
-                  }}
-                >
-                  {columnOrders.length}
-                </span>
-              </div>
+              <Card className="mb-3">
+                <CardHeader className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className={`size-2 rounded-full ${column.color}`} />
+                      <CardTitle className="text-sm">{column.label}</CardTitle>
+                    </div>
+                    <Badge variant="secondary">{columnOrders.length}</Badge>
+                  </div>
+                </CardHeader>
+              </Card>
 
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 {columnOrders.map(order => (
                   <OrderCard
                     key={order.id}
@@ -107,15 +90,11 @@ export default function BoardView() {
                 ))}
 
                 {columnOrders.length === 0 && (
-                  <div 
-                    className="px-4 py-8 rounded-md text-center border border-dashed"
-                    style={{
-                      borderColor: 'var(--color-border-subtle)',
-                      color: 'var(--color-text-quaternary)'
-                    }}
-                  >
-                    <p className="text-sm">No orders</p>
-                  </div>
+                  <Card className="border-dashed">
+                    <CardContent className="p-8 text-center">
+                      <p className="text-sm text-muted-foreground">No orders</p>
+                    </CardContent>
+                  </Card>
                 )}
               </div>
             </div>

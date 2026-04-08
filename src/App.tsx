@@ -5,6 +5,10 @@ import BoardView from './views/BoardView'
 import NewOrderView from './views/NewOrderView'
 import SearchView from './views/SearchView'
 import SettingsView from './views/SettingsView'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type View = 'board' | 'new-order' | 'search' | 'settings'
 
@@ -27,44 +31,39 @@ function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--color-bg-marketing)' }}>
-        <div className="p-6 rounded-lg border" style={{ 
-          background: 'var(--color-bg-surface)', 
-          borderColor: 'var(--color-border-standard)',
-          maxWidth: '400px'
-        }}>
-          <h2 className="text-lg font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-            Error
-          </h2>
-          <p style={{ color: 'var(--color-text-secondary)' }}>{error}</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </div>
     )
   }
 
   if (!isDbReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-marketing)' }}>
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-t-transparent" 
-               style={{ borderColor: 'var(--color-brand-accent)', borderTopColor: 'transparent' }} />
-          <p className="mt-4" style={{ color: 'var(--color-text-secondary)' }}>Loading database...</p>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Skeleton className="size-8 rounded-full" />
+          <p className="text-muted-foreground text-sm">Loading database...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--color-bg-marketing)' }}>
-      <Sidebar currentView={currentView} onViewChange={setCurrentView} />
-      
-      <main className="flex-1 ml-64 p-6" style={{ background: 'var(--color-bg-panel)' }}>
-        {currentView === 'board' && <BoardView />}
-        {currentView === 'new-order' && <NewOrderView onViewChange={setCurrentView} />}
-        {currentView === 'search' && <SearchView />}
-        {currentView === 'settings' && <SettingsView />}
-      </main>
-    </div>
+    <TooltipProvider>
+      <SidebarProvider>
+        <Sidebar currentView={currentView} onViewChange={setCurrentView} />
+        <SidebarInset className="bg-background">
+          <div className="p-6">
+            {currentView === 'board' && <BoardView />}
+            {currentView === 'new-order' && <NewOrderView onViewChange={setCurrentView} />}
+            {currentView === 'search' && <SearchView />}
+            {currentView === 'settings' && <SettingsView />}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
   )
 }
 

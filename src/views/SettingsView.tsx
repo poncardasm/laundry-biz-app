@@ -1,5 +1,9 @@
 import { useState, useRef } from 'react'
 import { exportDB, importDB, persistDB } from '../db'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { DownloadIcon, UploadIcon, SaveIcon } from 'lucide-react'
 
 export default function SettingsView() {
   const [exporting, setExporting] = useState(false)
@@ -88,180 +92,97 @@ export default function SettingsView() {
   return (
     <div className="max-w-2xl">
       <div className="mb-6">
-        <h2 style={{ color: 'var(--color-text-primary)' }}>Settings</h2>
-        <p className="mt-1 text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-          Backup and restore your data
-        </p>
+        <h2 className="text-2xl font-semibold">Settings</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Backup and restore your data</p>
       </div>
 
       {message && (
-        <div 
-          className="mb-6 px-4 py-3 rounded-md border"
-          style={{
-            background: message.type === 'success' ? 'rgba(39, 166, 68, 0.1)' : 'rgba(255, 100, 100, 0.1)',
-            borderColor: message.type === 'success' ? 'rgba(39, 166, 68, 0.3)' : 'rgba(255, 100, 100, 0.3)',
-            color: message.type === 'success' ? '#6fcf97' : '#ff9999'
-          }}
-        >
-          {message.text}
-        </div>
+        <Alert variant={message.type === 'error' ? 'destructive' : 'default'} className="mb-6">
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
       )}
 
-      <div className="space-y-6">
-        <div 
-          className="p-6 rounded-lg border"
-          style={{
-            background: 'rgba(255, 255, 255, 0.02)',
-            borderColor: 'var(--color-border-standard)'
-          }}
-        >
-          <h3 
-            className="text-base font-medium mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Storage Information
-          </h3>
-          <p 
-            className="text-sm mb-4"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Your data is stored locally in your browser using OPFS (Origin Private File System). 
-            Data persists across page refreshes but is not stored in the repository.
-          </p>
-          <p 
-            className="text-xs"
-            style={{ color: 'var(--color-text-tertiary)' }}
-          >
-            Auto-save interval: 3 seconds
-          </p>
-        </div>
+      <div className="flex flex-col gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Storage Information</CardTitle>
+            <CardDescription>
+              Your data is stored locally in your browser using OPFS (Origin Private File System). 
+              Data persists across page refreshes but is not stored in the repository.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">
+              Auto-save interval: 3 seconds
+            </p>
+          </CardContent>
+        </Card>
 
-        <div 
-          className="p-6 rounded-lg border"
-          style={{
-            background: 'rgba(255, 255, 255, 0.02)',
-            borderColor: 'var(--color-border-standard)'
-          }}
-        >
-          <h3 
-            className="text-base font-medium mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Manual Save
-          </h3>
-          <p 
-            className="text-sm mb-4"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Force save your data immediately instead of waiting for auto-save.
-          </p>
-          <button
-            onClick={handleManualSave}
-            className="px-4 py-2 rounded-md font-medium"
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: 'var(--color-text-secondary)'
-            }}
-          >
-            Save Now
-          </button>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Manual Save</CardTitle>
+            <CardDescription>
+              Force save your data immediately instead of waiting for auto-save.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" onClick={handleManualSave}>
+              <SaveIcon data-icon="inline-start" />
+              Save Now
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div 
-          className="p-6 rounded-lg border"
-          style={{
-            background: 'rgba(255, 255, 255, 0.02)',
-            borderColor: 'var(--color-border-standard)'
-          }}
-        >
-          <h3 
-            className="text-base font-medium mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Backup Database
-          </h3>
-          <p 
-            className="text-sm mb-4"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Export your database to a .db file for backup or transfer to another device.
-          </p>
-          <button
-            onClick={handleExport}
-            disabled={exporting}
-            className="px-4 py-2 rounded-md font-medium flex items-center gap-2"
-            style={{
-              background: 'var(--color-brand-bg)',
-              color: 'white',
-              opacity: exporting ? 0.6 : 1
-            }}
-          >
-            {exporting ? 'Exporting...' : 'Export Database'}
-          </button>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Backup Database</CardTitle>
+            <CardDescription>
+              Export your database to a .db file for backup or transfer to another device.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={handleExport} disabled={exporting}>
+              <DownloadIcon data-icon="inline-start" />
+              {exporting ? 'Exporting...' : 'Export Database'}
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div 
-          className="p-6 rounded-lg border"
-          style={{
-            background: 'rgba(255, 255, 255, 0.02)',
-            borderColor: 'var(--color-border-standard)'
-          }}
-        >
-          <h3 
-            className="text-base font-medium mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Restore Database
-          </h3>
-          <p 
-            className="text-sm mb-4"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Import a previously exported .db file. 
-            <strong style={{ color: 'var(--color-text-primary)' }}> Warning: This will replace all current data.</strong>
-          </p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".db"
-            onChange={handleImport}
-            disabled={importing}
-            className="hidden"
-            id="import-file"
-          />
-          <label
-            htmlFor="import-file"
-            className="inline-block px-4 py-2 rounded-md font-medium cursor-pointer"
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: 'var(--color-text-secondary)',
-              opacity: importing ? 0.6 : 1
-            }}
-          >
-            {importing ? 'Importing...' : 'Choose File'}
-          </label>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Restore Database</CardTitle>
+            <CardDescription>
+              Import a previously exported .db file. 
+              <span className="text-destructive font-medium"> Warning: This will replace all current data.</span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".db"
+              onChange={handleImport}
+              disabled={importing}
+              className="hidden"
+              id="import-file"
+            />
+            <Button variant="outline" asChild>
+              <label htmlFor="import-file" className="cursor-pointer">
+                <UploadIcon data-icon="inline-start" />
+                {importing ? 'Importing...' : 'Choose File'}
+              </label>
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div 
-          className="p-6 rounded-lg border"
-          style={{
-            background: 'rgba(255, 100, 100, 0.05)',
-            borderColor: 'rgba(255, 100, 100, 0.2)'
-          }}
-        >
-          <h3 
-            className="text-base font-medium mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Clear Data
-          </h3>
-          <p 
-            className="text-sm mb-4"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Clear all data by clearing site data in DevTools: Application → Storage → Clear site data
-          </p>
-        </div>
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardHeader>
+            <CardTitle className="text-destructive">Clear Data</CardTitle>
+            <CardDescription>
+              Clear all data by clearing site data in DevTools: Application → Storage → Clear site data
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </div>
     </div>
   )
