@@ -28,30 +28,35 @@ const STATUSES: {
   label: string
   color: string
   dotColor: string
+  bgColor: string
 }[] = [
   {
     id: "dropoff",
     label: "Drop-off",
-    color: "bg-violet-500",
-    dotColor: "bg-violet-500",
+    color: "bg-red-500",
+    dotColor: "bg-red-500",
+    bgColor: "bg-red-50",
   },
   {
     id: "washing",
     label: "Washing",
     color: "bg-blue-500",
     dotColor: "bg-blue-500",
+    bgColor: "bg-blue-50",
   },
   {
     id: "ready",
     label: "Ready",
     color: "bg-green-500",
     dotColor: "bg-green-500",
+    bgColor: "bg-green-50",
   },
   {
     id: "picked",
     label: "Picked Up",
     color: "bg-gray-500",
     dotColor: "bg-gray-500",
+    bgColor: "bg-gray-50",
   },
 ]
 
@@ -221,8 +226,9 @@ function Column({
     <div
       ref={setNodeRef}
       className={cn(
-        "flex h-full min-h-0 flex-col rounded-lg bg-muted/50 transition-all duration-200",
-        showDragOver && "scale-[1.02] bg-primary/10 ring-2 ring-primary"
+        "flex h-full min-h-0 flex-col rounded-lg transition-all duration-200",
+        status.bgColor,
+        showDragOver && "scale-[1.02] ring-2 ring-primary"
       )}
     >
       <div className="flex items-center gap-2 border-b border-border p-3">
